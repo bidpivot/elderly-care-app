@@ -12,7 +12,8 @@ function Doctors() {
         if (data) {
           setDoctors(data);
         }
-      });
+      })
+      .catch(error => console.log(error));
   }, []);
 
   return (
