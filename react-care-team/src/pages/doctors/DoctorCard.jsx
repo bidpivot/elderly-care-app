@@ -1,5 +1,6 @@
 export default function DoctorCard(props) {
   const { info } = props;
+  console.log(info.last_appointment);
 
   return (
     <div id="container">
@@ -18,7 +19,8 @@ export default function DoctorCard(props) {
           </div>
 
           <p>Put in something about next steps </p>
-          <p>Next Scheduled appointment: ____ </p>
+          <p>Last Appointment: {info.last_appointment.date_and_time} </p>
+          <p>Next Appointment: {info.next_appointment.date_and_time} </p>
           <button>See Details</button>
         </div>
       </div>

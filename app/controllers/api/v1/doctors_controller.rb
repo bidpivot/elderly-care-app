@@ -3,8 +3,18 @@ class Api::V1::DoctorsController < ApplicationController
 
   # GET /doctors
   def index
-    @doctors = Doctor.all
-
+    @doctors = Doctor.all.map do |doctor|
+      {
+        id: doctor.id,
+        first_name: doctor.first_name,
+        last_name: doctor.last_name,
+        phone: doctor.phone,
+        specialty: doctor.specialty,
+        last_appointment: doctor.appointments.where("date_and_time <= ?", DateTime.now).order(date_and_time: :desc).first,
+        next_appointment: doctor.appointments.where("date_and_time >= ?", DateTime.now).order(date_and_time: :desc).last,
+        notes: doctor.notes
+      }
+    end
     render json: @doctors
   end
 
