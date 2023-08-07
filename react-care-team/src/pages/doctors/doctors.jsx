@@ -8,7 +8,7 @@ function Doctors() {
     fetch("http://127.0.0.1:3000/api/v1/doctors")
       .then(response => response.json())
       .then(data => {
-        console.log(data); // likely have to create state for doctors and set it with data response
+//        console.log(data); // likely have to create state for doctors and set it with data response
         if (data) {
           setDoctors(data);
         }

@@ -1,6 +1,24 @@
+// import convertRubyDate from "../../helpers/dateFormatter.js";
+import { useParams, Link } from "react-router-dom";
+
 export default function DoctorCard(props) {
   const { info } = props;
-  console.log(info.last_appointment);
+
+  function convertRubyDate(rubyDate) {
+    const dateObject = new Date(rubyDate);
+
+    const niceFormattedDate = dateObject.toLocaleString("en-US", {
+      weekday: "long", // Full weekday name (e.g., "Sunday")
+      year: "numeric", // 4-digit year (e.g., "2023")
+      month: "long", // Full month name (e.g., "August")
+      day: "numeric", // Day of the month (e.g., "6")
+      hour: "numeric", // Hour (e.g., "12")
+      minute: "numeric", // Minute (e.g., "34")
+      timeZoneName: "short", // Short time zone name (e.g., "PDT")
+    });
+
+    return niceFormattedDate;
+  }
 
   return (
     <div id="container">
@@ -19,9 +37,17 @@ export default function DoctorCard(props) {
           </div>
 
           <p>Put in something about next steps </p>
-          <p>Last Appointment: {info.last_appointment.date_and_time} </p>
-          <p>Next Appointment: {info.next_appointment.date_and_time} </p>
-          <button>See Details</button>
+          <p>
+            Last Appointment:{" "}
+            {convertRubyDate(info.last_appointment.date_and_time)}{" "}
+          </p>
+          <p>
+            Next Appointment:{" "}
+            {convertRubyDate(info.next_appointment.date_and_time)}{" "}
+          </p>
+          <Link to={`/doctors/${info.id}`}>
+            <button>See Details</button>
+          </Link>
         </div>
       </div>
     </div>
