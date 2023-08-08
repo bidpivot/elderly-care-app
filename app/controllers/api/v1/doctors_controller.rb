@@ -20,8 +20,15 @@ class Api::V1::DoctorsController < ApplicationController
 
   # GET /doctors/1
   def show
-    render json: @doctor
+    @notes = @doctor.notes
+    @appts_history = @doctor.appointments.where('date_and_time < ?', DateTime.now).order(date_and_time: :desc)
+    @appts_future = @doctor.appointments.where('date_and_time >= ?', DateTime.now).order(date_and_time: :asc)
+    @last_appointment = @doctor.appointments.where("date_and_time <= ?", DateTime.now).order(date_and_time: :desc).first
+    @next_appointment = @doctor.appointments.where("date_and_time >= ?", DateTime.now).order(date_and_time: :desc).last
+    @doctor_data = { **@doctor.attributes, notes: @notes, appts_history: @appts_history, appts_future: @appts_future, last_appointment: @last_appointment, next_appointment: @next_appointment  }
+    render json: @doctor_data
   end
+  
 
   # POST /doctors
   def create

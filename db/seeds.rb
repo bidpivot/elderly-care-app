@@ -7,8 +7,8 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 # Doctors
-Doctor.create!(first_name: "Mitch", last_name: "Karl", phone: "555-555-5555", specialty: "General Practitioner")
-Doctor.create!(first_name: "Anette", last_name: "Falchook", phone: "561-555-5555", specialty: "Neurologist")
+Doctor.create!(first_name: "Mitch", last_name: "Karl", phone: "561-392-9214", specialty: "General Practitioner", next_steps: "follow up in 6 months", address: "880 North West 13th St, Suite 1B, Boca Raton, FL 33486", website: "www.drkarlcares.com")
+Doctor.create!(first_name: "Anette", last_name: "Falchook", phone: "561-338-8484", specialty: "Neurologist", next_steps: "asses progress with new Rytari meds and make decision whether to continue on it", address: "1050 NW 15th St suite 216 a, Boca Raton, FL 33486", website: nil)
 
 
 # Appointments
@@ -27,6 +27,11 @@ Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-11-11 11:00:
 Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-06-22 11:00:00")
 Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-04-11 10:00:00")
 Appointment.create!(doctor: Doctor.all.second, date_and_time: "2024-11-05 10:00:00")
+
+# Questions to ask doctor
+Question.create!(doctor: Doctor.all.second, content: "an example of a question?", answer: "your question makes no sense", answered: false)
+Question.create!(doctor: Doctor.all.first, content: "an example of a question?", answer: "example answer", answered: false)
+
 
 # Notes
 Note.create!(doctor: Doctor.all.first, content: "this is some placeholder text so that it looks like there is some content here for a note that represents notes taken while at the doctor")

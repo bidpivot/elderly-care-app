@@ -1,4 +1,4 @@
-function convertRubyDate(rubyDate) {
+export default function convertRubyDate(rubyDate) {
   const dateObject = new Date(rubyDate);
 
   const niceFormattedDate = dateObject.toLocaleString("en-US", {
@@ -13,5 +13,3 @@ function convertRubyDate(rubyDate) {
 
   return niceFormattedDate;
 }
-
-export default { convertRubyDate };
