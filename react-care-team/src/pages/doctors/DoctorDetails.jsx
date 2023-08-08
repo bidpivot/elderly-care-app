@@ -1,10 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { AppContext } from "../../helpers/AppContext";
 
 export default function DoctorDetails() {
   const params = useParams();
   const [doctor, setDoctor] = useState({});
   // console.log(params.id);
+  const context = useContext(AppContext);
+  console.log(context);
+  const nextAppt = doctor.next_appointment?.date_and_time; // defined next appt date from doctor state
+  const nextApptDate = context.convertRubyDate(nextAppt); // converted it to better format with datehelper function from context
+  const lastAppt = doctor.last_appointment?.date_and_time;
+  const lastApptDate = context.convertRubyDate(lastAppt);
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/v1/doctors/${params.id}`)
@@ -34,17 +41,9 @@ export default function DoctorDetails() {
         <h3>Important Info</h3>
         <p>Next Steps: {doctor.next_steps}</p>
         <p>
-          Next Appt:{" "}
-          {doctor.next_appointment
-            ? doctor.next_appointment.date_and_time
-            : "No Scheduled Appointments"}
+          Next Appt: {nextAppt ? nextApptDate : "No Scheduled Appointments"}
         </p>
-        <p>
-          Last Appt:{" "}
-          {doctor.last_appointment
-            ? doctor.last_appointment.date_and_time
-            : "No Appointment History"}
-        </p>
+        <p>Last Appt: {lastAppt ? lastApptDate : "No Appointment History"}</p>
       </div>
     </>
   );

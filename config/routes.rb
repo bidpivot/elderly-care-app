@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   resources :appointments
   namespace :api do
     namespace :v1 do
-      resources :doctors
+      resources :doctors do
+        resources :prescriptions
+      end
     end
   end
 

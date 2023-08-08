@@ -1,8 +1,12 @@
 // import convertRubyDate from "../../helpers/dateFormatter.js";
 import { useParams, Link } from "react-router-dom";
+import { AppContext } from "../../helpers/AppContext";
+import { useContext } from "react";
 
 export default function DoctorCard(props) {
   const { info } = props;
+
+  const context = useContext(AppContext);
 
   function convertRubyDate(rubyDate) {
     const dateObject = new Date(rubyDate);

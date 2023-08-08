@@ -7,9 +7,9 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 # Doctors
-Doctor.create!(first_name: "Mitch", last_name: "Karl", phone: "561-392-9214", specialty: "General Practitioner", next_steps: "follow up in 6 months", address: "880 North West 13th St, Suite 1B, Boca Raton, FL 33486", website: "www.drkarlcares.com")
-Doctor.create!(first_name: "Anette", last_name: "Falchook", phone: "561-338-8484", specialty: "Neurologist", next_steps: "asses progress with new Rytari meds and make decision whether to continue on it", address: "1050 NW 15th St suite 216 a, Boca Raton, FL 33486", website: nil)
-
+karl = Doctor.create!(first_name: "Mitch", last_name: "Karl", phone: "561-392-9214", specialty: "General Practitioner", next_steps: "follow up in 6 months", address: "880 North West 13th St, Suite 1B, Boca Raton, FL 33486", website: "www.drkarlcares.com")
+falchook = Doctor.create!(first_name: "Anette", last_name: "Falchook", phone: "561-338-8484", specialty: "Neurologist", next_steps: "asses progress with new Rytari meds and make decision whether to continue on it", address: "1050 NW 15th St suite 216 a, Boca Raton, FL 33486", website: nil)
+Lazar = Doctor.create!(first_name: "Ira", last_name: "Lazar", phone: "555-1212", specialty: "Kidney Specialist", next_steps: "get blood work again in 6months and see him for follow up to review results", address: "please input", website: nil)
 
 # Appointments
 Appointment.create!(doctor: Doctor.all.first, date_and_time: "2021-01-01 01:00:00")
@@ -32,6 +32,10 @@ Appointment.create!(doctor: Doctor.all.second, date_and_time: "2024-11-05 10:00:
 Question.create!(doctor: Doctor.all.second, content: "an example of a question?", answer: "your question makes no sense", answered: false)
 Question.create!(doctor: Doctor.all.first, content: "an example of a question?", answer: "example answer", answered: false)
 
+
+# Prescriptions owned by doctors
+Prescription.create!(dosage: "5mg", frequency: "3x per day", status: true, ended: nil, tablets: "1", name: "Eliquis", purpose: "blood Thinner", doctor: karl)
+Prescription.create!(dosage: "?", frequency: "3x per day", status: true, ended: nil, tablets: "1", name: "Rytari", purpose: "Parkinsons symptoms", doctor: falchook)
 
 # Notes
 Note.create!(doctor: Doctor.all.first, content: "this is some placeholder text so that it looks like there is some content here for a note that represents notes taken while at the doctor")
