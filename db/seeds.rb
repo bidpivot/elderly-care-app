@@ -12,24 +12,24 @@ falchook = Doctor.create!(first_name: "Anette", last_name: "Falchook", phone: "5
 Lazar = Doctor.create!(first_name: "Ira", last_name: "Lazar", phone: "555-1212", specialty: "Kidney Specialist", next_steps: "get blood work again in 6months and see him for follow up to review results", address: "please input", website: nil)
 
 # Appointments
-Appointment.create!(doctor: Doctor.all.first, date_and_time: "2021-01-01 01:00:00")
-Appointment.create!(doctor: Doctor.all.first, date_and_time: "2022-02-16 11:00:00")
-Appointment.create!(doctor: Doctor.all.first, date_and_time: "2023-07-16 11:00:00")
-Appointment.create!(doctor: Doctor.all.first, date_and_time: "2023-07-31 01:00:00")
-Appointment.create!(doctor: Doctor.all.first, date_and_time: "2023-05-15 10:00:00")
-Appointment.create!(doctor: Doctor.all.first, date_and_time: "2024-12-15 10:00:00")
-Appointment.create!(doctor: Doctor.all.first, date_and_time: "2023-09-16 12:00:00")
+Appointment.create!(doctor: karl, date_and_time: "2021-01-01 01:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: karl, date_and_time: "2022-02-16 11:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: karl, date_and_time: "2023-07-16 11:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: karl, date_and_time: "2023-07-31 01:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: karl, date_and_time: "2023-05-15 10:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: karl, date_and_time: "2024-12-15 10:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: karl, date_and_time: "2023-09-16 12:00:00", note: "some notes from the appointment")
 
-Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-08-08 08:00:00")
-Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-09-09 09:00:00")
-Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-10-10 10:00:00")
-Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-11-11 11:00:00")
-Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-06-22 11:00:00")
-Appointment.create!(doctor: Doctor.all.second, date_and_time: "2023-04-11 10:00:00")
-Appointment.create!(doctor: Doctor.all.second, date_and_time: "2024-11-05 10:00:00")
+Appointment.create!(doctor: falchook, date_and_time: "2023-08-08 08:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: falchook, date_and_time: "2023-09-09 09:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: falchook, date_and_time: "2023-10-10 10:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: falchook, date_and_time: "2023-11-11 11:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: falchook, date_and_time: "2023-06-22 11:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: falchook, date_and_time: "2023-04-11 10:00:00", note: "some notes from the appointment")
+Appointment.create!(doctor: falchook, date_and_time: "2024-11-05 10:00:00", note: "some notes from the appointment")
 
 # Questions to ask doctor
-Question.create!(doctor: Doctor.all.second, content: "an example of a question?", answer: "your question makes no sense", answered: false)
+Question.create!(doctor: falchook, content: "an example of a question?", answer: "your question makes no sense", answered: false)
 Question.create!(doctor: Doctor.all.first, content: "an example of a question?", answer: "example answer", answered: false)
 
 
