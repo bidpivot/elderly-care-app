@@ -25,15 +25,17 @@ export default function DoctorDetails() {
 
   return (
     <>
-      <div className="profile">
-        <h1>Dr. {`${doctor.first_name} ${doctor.last_name}`}</h1>
+      <h1>Dr. {`${doctor.first_name} ${doctor.last_name}`}</h1>
+      <div className="profile-doctor">
         <h3>Profile</h3>
-        <p>Specialty: {doctor.specialty}</p>
-        <p>Phone Number: {doctor.phone}</p>
-        <p>Address: {doctor.address}</p>
-        <p>Website: {doctor.website}</p>
+        <div className="profile-content">
+          <p>Specialty: {doctor.specialty}</p>
+          <p>Phone Number: {doctor.phone}</p>
+          <p>Address: {doctor.address}</p>
+          <p>Website: {doctor.website}</p>
+        </div>
       </div>
-      <div className="relevant-info">
+      <div className="relevant-info-doctor">
         <h3>Important Info</h3>
         <p>Next Steps: {doctor.next_steps}</p>
         <p>
@@ -53,7 +55,7 @@ export default function DoctorDetails() {
               doctor.appts_history.map(appt => {
                 return (
                   <tr key={appt.id}>
-                    <td>{appt.date_and_time}</td>
+                    <td>{context.convertRubyDate(appt.date_and_timeP)}</td>
                     <td>{appt.note}</td>
                   </tr>
                 );
