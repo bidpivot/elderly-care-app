@@ -40,3 +40,7 @@ Prescription.create!(dosage: "?", frequency: "3x per day", status: true, ended: 
 # Notes
 Note.create!(doctor: Doctor.all.first, content: "this is some placeholder text so that it looks like there is some content here for a note that represents notes taken while at the doctor")
 Note.create!(doctor: Doctor.all.second, content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+
+# tasks => need to be owned by a user eventually
+Task.create!(title: "get sub for Ana's vacation", content: "Call OneCall and see if they can get coverage for the 24th and 31", due: Date.today, status: "pending", task_type: "follow-up") 
+Task.create!(title: "pay hospital bill", content: "you have outstanding bills from hospital visit and you are paying them off month by month", due: Date.today, status: "pending", task_type: "bill") 

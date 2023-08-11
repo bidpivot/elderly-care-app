@@ -20,31 +20,33 @@ function Prescriptions() {
     <div>
       <h1>Current Prescriptions</h1>
       <table>
-        <tr>
-          <th>Name</th>
-          <th>Purpose</th>
-          <th>Total Daily Dosage</th>
-          <th>Frequency</th>
-          <th>Presribing Doctor</th>
-          <th>Status</th>
-          <th>Date Ended</th>
-        </tr>
-        {prescriptions.map(prescription => {
-          return (
-            <tr key="{prescription.id}">
-              <td>{prescription.name}</td>
-              <td>{prescription.purpose}</td>
-              <td>{prescription.dosage}</td>
-              <td>{prescription.frequency}</td>
-              <td>
-                {prescription.doctor.last_name} ({prescription.doctor.specialty}
-                )
-              </td>
-              <td>{prescription.status ? "active" : "ended"}</td>
-              <td>{prescription.status ? "active" : prescription.ended}</td>
-            </tr>
-          );
-        })}
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <th>Purpose</th>
+            <th>Total Daily Dosage</th>
+            <th>Frequency</th>
+            <th>Presribing Doctor</th>
+            <th>Status</th>
+            <th>Date Ended</th>
+          </tr>
+          {prescriptions.map(prescription => {
+            return (
+              <tr key={prescription.id}>
+                <td>{prescription.name}</td>
+                <td>{prescription.purpose}</td>
+                <td>{prescription.dosage}</td>
+                <td>{prescription.frequency}</td>
+                <td>
+                  {prescription.doctor.last_name} (
+                  {prescription.doctor.specialty})
+                </td>
+                <td>{prescription.status ? "active" : "ended"}</td>
+                <td>{prescription.status ? "active" : prescription.ended}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );
