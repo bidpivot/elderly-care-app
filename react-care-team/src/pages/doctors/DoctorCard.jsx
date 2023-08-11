@@ -1,24 +1,18 @@
 // import convertRubyDate from "../../helpers/dateFormatter.js";
 import { useParams, Link } from "react-router-dom";
+import { AppContext } from "../../helpers/AppContext";
+import { useContext } from "react";
 
 export default function DoctorCard(props) {
   const { info } = props;
 
-  function convertRubyDate(rubyDate) {
-    const dateObject = new Date(rubyDate);
-
-    const niceFormattedDate = dateObject.toLocaleString("en-US", {
-      weekday: "long", // Full weekday name (e.g., "Sunday")
-      year: "numeric", // 4-digit year (e.g., "2023")
-      month: "long", // Full month name (e.g., "August")
-      day: "numeric", // Day of the month (e.g., "6")
-      hour: "numeric", // Hour (e.g., "12")
-      minute: "numeric", // Minute (e.g., "34")
-      timeZoneName: "short", // Short time zone name (e.g., "PDT")
-    });
-
-    return niceFormattedDate;
-  }
+  const context = useContext(AppContext);
+  const lastAppt = context.convertRubyDate(
+    info.last_appointment?.date_and_time
+  );
+  const nextAppt = context.convertRubyDate(
+    info.next_appointment?.date_and_time
+  );
 
   return (
     <div id="container">
@@ -39,11 +33,11 @@ export default function DoctorCard(props) {
           <p>Put in something about next steps </p>
           <p>
             Last Appointment:{" "}
-            {convertRubyDate(info.last_appointment.date_and_time)}{" "}
+            {info.last_appointment ? lastAppt : "No appointment history"}{" "}
           </p>
           <p>
             Next Appointment:{" "}
-            {convertRubyDate(info.next_appointment.date_and_time)}{" "}
+            {info.next_appointment ? nextAppt : "No scheduled appointments"}{" "}
           </p>
           <Link to={`/doctors/${info.id}`}>
             <button>See Details</button>

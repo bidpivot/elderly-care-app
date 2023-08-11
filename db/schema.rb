@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_07_145047) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_09_145004) do
   create_table "appointments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "doctor_id", null: false
     t.datetime "date_and_time"
+    t.text "note"
     t.index ["doctor_id"], name: "index_appointments_on_doctor_id"
   end
 
@@ -39,6 +40,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_07_145047) do
     t.index ["doctor_id"], name: "index_notes_on_doctor_id"
   end
 
+  create_table "prescriptions", force: :cascade do |t|
+    t.string "dosage"
+    t.string "frequency"
+    t.boolean "status"
+    t.date "ended"
+    t.integer "tablets"
+    t.string "name"
+    t.string "purpose"
+    t.integer "doctor_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_id"], name: "index_prescriptions_on_doctor_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.text "content"
     t.text "answer"
@@ -51,5 +66,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_07_145047) do
 
   add_foreign_key "appointments", "doctors"
   add_foreign_key "notes", "doctors"
+  add_foreign_key "prescriptions", "doctors"
   add_foreign_key "questions", "doctors"
 end
