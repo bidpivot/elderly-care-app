@@ -18,10 +18,10 @@ class Api::V1::TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
 
-    if @task.save
-      render :show, status: :created, location: @task
+    if @task.save!
+      render json: { data: @task, status: 'success'}, status: :ok
     else
-      render json: @task.errors, status: :unprocessable_entity
+      render json: { data: @task.errors.full_messages, status: 'failure'}, status: :unprocessable_entity
     end
   end
 
@@ -49,6 +49,6 @@ class Api::V1::TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:title, :content, :due, :status, :type)
+      params.require(:task).permit(:title, :content, :due, :status, :task_type)
     end
 end
