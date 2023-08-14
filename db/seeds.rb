@@ -10,6 +10,8 @@
 karl = Doctor.create!(first_name: "Mitch", last_name: "Karl", phone: "561-392-9214", specialty: "General Practitioner", next_steps: "follow up in 6 months", address: "880 North West 13th St, Suite 1B, Boca Raton, FL 33486", website: "www.drkarlcares.com")
 falchook = Doctor.create!(first_name: "Anette", last_name: "Falchook", phone: "561-338-8484", specialty: "Neurologist", next_steps: "asses progress with new Rytari meds and make decision whether to continue on it", address: "1050 NW 15th St suite 216 a, Boca Raton, FL 33486", website: nil)
 Lazar = Doctor.create!(first_name: "Ira", last_name: "Lazar", phone: "555-1212", specialty: "Kidney Specialist", next_steps: "get blood work again in 6months and see him for follow up to review results", address: "please input", website: nil)
+Gonzalez = Doctor.create!(first_name: "Marco", last_name: "Gonzalez", phone: "(561) 498-8100", specialty: "Opthamologist", next_steps: "check astigmatism", address: "16201 S MILITARY TRL
+  Delray Beach, FL 33484", website: nil)
 
 # Appointments
 Appointment.create!(doctor: karl, date_and_time: "2021-01-01 01:00:00", note: "some notes from the appointment")

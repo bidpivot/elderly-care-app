@@ -97,9 +97,20 @@ export default function Tasks() {
           setTaskType("");
           setTitle("");
           setContent("");
+          setValidation("");
         }
       })
       .catch(error => console.log({ error }));
+  }
+
+  function handleCancelClick() {
+    setDue("");
+    setStatus("");
+    setTaskType("");
+    setTitle("");
+    setContent("");
+    setCreating(false);
+    setValidation("");
   }
 
   return (
@@ -122,6 +133,7 @@ export default function Tasks() {
           content={content}
           onContentChange={event => setContent(event.target.value)}
           onFormSubmit={handleFormSubmit}
+          onCancelClick={handleCancelClick}
         />
       )}
       <table>

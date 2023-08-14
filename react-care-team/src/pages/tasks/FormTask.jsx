@@ -54,8 +54,12 @@ export default function FormTask(props) {
           onChange={props.onContentChange}
         ></textarea>
 
+        <label for="task-file">Add Image (optional):</label>
+        <input type="file" id="task-file" name="task-file" />
+
         <input type="submit" />
       </form>
+      <button onClick={props.onCancelClick}>Cancel</button>
     </div>
   );
 }
