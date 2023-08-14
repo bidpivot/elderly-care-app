@@ -26,7 +26,8 @@ export default function Tasks() {
         if (data) {
           setTasks(data);
         }
-      });
+      })
+      .catch(error => console.log(error));
   }, []);
 
   function handleCreateClick() {
@@ -34,8 +35,25 @@ export default function Tasks() {
   }
 
   useEffect(() => {
-    console.log("taskType changed on Tasks component");
-  }, [taskType]);
+    console.log({ tasks });
+  }, [tasks]);
+
+  function handleDeleteClick(id) {
+    // first delete task from database
+    // then delete it from state when you have confirmation of deletion from the db
+    fetch(`http://localhost:3000/api/v1/tasks/${id}`, { method: "DELETE" })
+      .then(response => response.json()) // why was this raising error with react console?
+      .then(data => {
+        console.log(data);
+        const updatedTasks = tasks.filter(task => {
+          console.log(task.id);
+          console.log(data.deleted_task_id);
+          return task.id !== data.deleted_task_id;
+        });
+        setTasks(updatedTasks);
+      })
+      .catch(error => console.log(error));
+  }
 
   function handleFormSubmit(event) {
     event.preventDefault();
@@ -122,6 +140,18 @@ export default function Tasks() {
                   <td>{task.due}</td>
                   <td>{task.status}</td>
                   <td>{task.task_type}</td>
+                  <td>
+                    <button onClick={() => handleDeleteClick(task.id)}>
+                      delete
+                    </button>
+                    {/*
+                    -find id of this task
+                    -create HandleDeleteClick function that does the following:
+                      -removes task from tasks state
+                      -delete request to database with this id
+                    -add onClick event to button that calls the HandleDeleteClick function with id as parameter
+                    */}
+                  </td>
                 </tr>
               );
             })}

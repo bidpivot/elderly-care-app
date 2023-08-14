@@ -38,8 +38,14 @@ class Api::V1::TasksController < ApplicationController
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
-    @task.destroy
+    deleted_task_id = @task.id
+    if @task.destroy
+      render json: { deleted_task_id: deleted_task_id, status: 'Task was deleted from the database' }, status: :ok
+    else
+      render json: { data: @task.errors.full_messages, status: 'Failed to delete' }, status: :unprocessable_entity
+    end
   end
+  
 
   private
     # Use callbacks to share common setup or constraints between actions.
