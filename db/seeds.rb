@@ -9,8 +9,8 @@
 # Doctors
 karl = Doctor.create!(first_name: "Mitch", last_name: "Karl", phone: "561-392-9214", specialty: "General Practitioner", next_steps: "follow up in 6 months", address: "880 North West 13th St, Suite 1B, Boca Raton, FL 33486", website: "www.drkarlcares.com")
 falchook = Doctor.create!(first_name: "Anette", last_name: "Falchook", phone: "561-338-8484", specialty: "Neurologist", next_steps: "asses progress with new Rytari meds and make decision whether to continue on it", address: "1050 NW 15th St suite 216 a, Boca Raton, FL 33486", website: nil)
-Lazar = Doctor.create!(first_name: "Ira", last_name: "Lazar", phone: "555-1212", specialty: "Kidney Specialist", next_steps: "get blood work again in 6months and see him for follow up to review results", address: "please input", website: nil)
-Gonzalez = Doctor.create!(first_name: "Marco", last_name: "Gonzalez", phone: "(561) 498-8100", specialty: "Opthamologist", next_steps: "check astigmatism", address: "16201 S MILITARY TRL
+lazar = Doctor.create!(first_name: "Ira", last_name: "Lazar", phone: "555-1212", specialty: "Kidney Specialist", next_steps: "get blood work again in 6months and see him for follow up to review results", address: "please input", website: nil)
+gonzalez = Doctor.create!(first_name: "Marco", last_name: "Gonzalez", phone: "(561) 498-8100", specialty: "Opthamologist", next_steps: "check astigmatism", address: "16201 S MILITARY TRL
   Delray Beach, FL 33484", website: nil)
 
 # Appointments
@@ -42,6 +42,19 @@ Prescription.create!(dosage: "?", frequency: "3x per day", status: true, ended: 
 # Notes
 Note.create!(doctor: Doctor.all.first, content: "this is some placeholder text so that it looks like there is some content here for a note that represents notes taken while at the doctor")
 Note.create!(doctor: Doctor.all.second, content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+Note.create!(doctor: gonzalez, content: "8.14.23 - Dr. Marco Gonzalez (Opthamologist)
+- dad's eye has not detoriated since the last time
+- he still has fluid but it has not gotten worse
+- he also is not bleeding which is the most important thing
+- dad's condition is called central serous retinopathy
+- this falls under the umbrella of macular degeneration
+- people with csr generally do not respond as well to injections and dad did not the last time Gonzalez tried it
+- but he needs to scan the eye every 3 months to make sure there is no bleeding
+- if there is bleeding then he has to try the injections again
+next steps: scan the eye again in 3 months.  
+next appt: Nov 13, 2023 @ 1pm
+")
+
 
 # tasks => need to be owned by a user eventually
 Task.create!(title: "get sub for Ana's vacation", content: "Call OneCall and see if they can get coverage for the 24th and 31", due: Date.today, status: "pending", task_type: "follow-up") 

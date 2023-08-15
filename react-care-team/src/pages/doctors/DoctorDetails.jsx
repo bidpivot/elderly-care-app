@@ -1,27 +1,76 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../../helpers/AppContext";
+import FormAppointment from "../appointments/FormAppointment.jsx";
 
 export default function DoctorDetails() {
+  const context = useContext(AppContext);
   const params = useParams();
   const [doctor, setDoctor] = useState({});
-  // console.log(params.id);
-  const context = useContext(AppContext);
+  const [apptsHistory, setApptsHistory] = useState([]);
+  const [creatingForm, setCreatingForm] = useState(false);
+  const [apptDate, setApptDate] = useState("");
+  const [apptNote, setApptNote] = useState("");
+  const [validation, setValidation] = useState("");
   // console.log(context);
   const nextAppt = doctor.next_appointment?.date_and_time; // defined next appt date from doctor state
   const nextApptDate = context.convertRubyDate(nextAppt); // converted it to better format with datehelper function from context
   const lastAppt = doctor.last_appointment?.date_and_time;
   const lastApptDate = context.convertRubyDate(lastAppt);
 
+  function convertToUTC(localDate) {
+    const utcDate = new Date(localDate);
+    utcDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+    return utcDate.toISOString(); // Store this UTC date on the server
+  }
+
   useEffect(() => {
     fetch(`http://localhost:3000/api/v1/doctors/${params.id}`)
       .then(r => r.json())
       .then(data => {
-        // console.log(data.appts_history);
+        console.log(data.appts_history);
         setDoctor(data);
+        setApptsHistory(data.appts_history);
       })
       .catch(error => console.error(error));
   }, []);
+
+  function handleApptSubmit(event) {
+    event.preventDefault();
+
+    if (!apptDate) {
+      setValidation("Appointment date is required");
+      return;
+    }
+    // if (!apptNote) {
+    //   setValidation("Appointment note is required");
+    //   return;
+    // }
+
+    // Convert the user-selected local time to UTC
+    const utcApptDate = convertToUTC(new Date(apptDate));
+    console.log(utcApptDate);
+
+    fetch("http://localhost:3000/api/v1/appointments", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        date_and_time: utcApptDate,
+        note: apptNote,
+        doctor_id: doctor.id,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        // create state for appointments and reset it with the new appointment spread into the previous array of appts
+        setCreatingForm(false);
+        setApptsHistory([...apptsHistory, data.appt]);
+      })
+      .catch(error => console.log(error));
+  }
 
   return (
     <>
@@ -50,18 +99,35 @@ export default function DoctorDetails() {
               <th>Appointment Date</th>
               <th>Note</th>
             </tr>
-            {console.log(doctor.appts_history)}
-            {doctor.appts_history &&
-              doctor.appts_history.map(appt => {
+
+            {apptsHistory &&
+              apptsHistory.map(appt => {
                 return (
                   <tr key={appt.id}>
-                    <td>{context.convertRubyDate(appt.date_and_timeP)}</td>
+                    <td>{context.convertRubyDate(appt.date_and_time)}</td>
                     <td>{appt.note}</td>
                   </tr>
                 );
               })}
           </tbody>
         </table>
+      </div>
+      <div>
+        {!creatingForm && (
+          <button onClick={() => setCreatingForm(true)}>
+            Create Appointment
+          </button>
+        )}
+        {creatingForm && (
+          <FormAppointment
+            onDateChange={e => setApptDate(e.target.value)}
+            appt-date={apptDate}
+            onNoteChange={e => setApptNote(e.target.value)}
+            appt-note={apptNote}
+            onFormSubmit={handleApptSubmit}
+            validation={validation}
+          />
+        )}
       </div>
     </>
   );

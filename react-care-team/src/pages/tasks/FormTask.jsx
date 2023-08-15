@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function FormTask(props) {
-  console.log(`FormTask has taskType as ${props.taskType}`);
+  // console.log(`FormTask component called`);
   return (
     <div>
       <form action="/api/v1/tasks" onSubmit={props.onFormSubmit}>
