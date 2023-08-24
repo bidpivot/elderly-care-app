@@ -1,3 +1,5 @@
+// import DatePicker from "react-datepicker";
+
 export default function FormAppointment(props) {
   return (
     <div>
@@ -12,6 +14,15 @@ export default function FormAppointment(props) {
           value={props.apptDate}
         />
 
+        {/* <label htmlFor="appt-time">Appointment Time</label>
+        <input
+          type="time"
+          id="appt-time"
+          name="appt-time"
+          onChange={props.onTimeChange}
+          value={props.apptTime}
+        /> */}
+
         <label htmlFor="appt-note">Notes</label>
         <input
           type="textarea"
@@ -23,6 +34,8 @@ export default function FormAppointment(props) {
 
         <input type="submit" />
       </form>
+      {/* <div className="validation-message">{props.validation}</div> */}
+      <button onClick={props.onCancelClick}>cancel</button>
     </div>
   );
 }

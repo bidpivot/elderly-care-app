@@ -8,8 +8,10 @@ export default function DoctorDetails() {
   const params = useParams();
   const [doctor, setDoctor] = useState({});
   const [apptsHistory, setApptsHistory] = useState([]);
+  // const [allAppts, setAllAppts] = useState([]);
   const [creatingForm, setCreatingForm] = useState(false);
   const [apptDate, setApptDate] = useState("");
+  const [apptTime, setApptTime] = useState("");
   const [apptNote, setApptNote] = useState("");
   const [validation, setValidation] = useState("");
   // console.log(context);
@@ -25,6 +27,10 @@ export default function DoctorDetails() {
   }
 
   useEffect(() => {
+    console.log(apptDate);
+  }, [apptDate]);
+
+  useEffect(() => {
     fetch(`http://localhost:3000/api/v1/doctors/${params.id}`)
       .then(r => r.json())
       .then(data => {
@@ -34,6 +40,26 @@ export default function DoctorDetails() {
       })
       .catch(error => console.error(error));
   }, []);
+
+  function handleDeleteClick(id) {
+    fetch(`http://localhost:3000/api/v1/appointments/${id}`, {
+      method: "DELETE",
+    })
+      .then(response => response.json()) // why was this raising error with react console?
+      .then(data => {
+        console.log(data);
+        const updatedAppointments = apptsHistory.filter(appt => {
+          // console.log(appt.id); // check to make sure appt.id is the same as deleted_appt_id
+          // console.log(data.deleted_appt_id);
+          return appt.id !== data.deleted_appt_id;
+        });
+        const sortedAppts = updatedAppointments.sort(
+          (a, b) => a.date_and_time - b.date_and_time
+        );
+        setApptsHistory(sortedAppts);
+      })
+      .catch(error => console.log(error));
+  }
 
   function handleApptSubmit(event) {
     event.preventDefault();
@@ -48,8 +74,8 @@ export default function DoctorDetails() {
     // }
 
     // Convert the user-selected local time to UTC
-    const utcApptDate = convertToUTC(new Date(apptDate));
-    console.log(utcApptDate);
+    // const utcApptDate = convertToUTC(new Date(apptDate));
+    // console.log(utcApptDate);
 
     fetch("http://localhost:3000/api/v1/appointments", {
       method: "post",
@@ -57,7 +83,7 @@ export default function DoctorDetails() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        date_and_time: utcApptDate,
+        date_and_time: apptDate, // we might want to change this back to utcApptDate
         note: apptNote,
         doctor_id: doctor.id,
       }),
@@ -106,6 +132,9 @@ export default function DoctorDetails() {
                   <tr key={appt.id}>
                     <td>{context.convertRubyDate(appt.date_and_time)}</td>
                     <td>{appt.note}</td>
+                    <td>
+                      <a onClick={() => handleDeleteClick(appt.id)}>delete</a>
+                    </td>
                   </tr>
                 );
               })}
@@ -122,10 +151,13 @@ export default function DoctorDetails() {
           <FormAppointment
             onDateChange={e => setApptDate(e.target.value)}
             appt-date={apptDate}
+            onTimeChange={e => setApptTime(e.target.value)}
+            appt-time={apptTime}
             onNoteChange={e => setApptNote(e.target.value)}
             appt-note={apptNote}
             onFormSubmit={handleApptSubmit}
             validation={validation}
+            onCancelClick={() => setCreatingForm(false)}
           />
         )}
       </div>

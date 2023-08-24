@@ -37,8 +37,17 @@ class Api::V1::AppointmentsController < ApplicationController
 
   # DELETE /appointments/1
   # DELETE /appointments/1.json
+  # def destroy
+  #   @appointment.destroy
+  # end
+
   def destroy
-    @appointment.destroy
+    deleted_appt_id = @appointment.id
+    if @appointment.destroy
+      render json: { deleted_appt_id: deleted_appt_id, status: "Appt #{deleted_appt_id} was deleted from the database" }, status: :ok
+    else
+      render json: { data: @appointment.errors.full_messages, status: 'Failed to delete' }, status: :unprocessable_entity
+    end
   end
 
   private
