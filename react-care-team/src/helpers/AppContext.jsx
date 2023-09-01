@@ -19,6 +19,11 @@ function AppProvider(props) {
     return niceFormattedDate;
   }
 
+  // function handleTaskDelete(id) {
+  //   const updatedTasks = tasks.filter((task) => task.id !== id);
+  //   setTasks(updatedTasks);
+  //   }
+
   const values = {
     convertRubyDate,
   };

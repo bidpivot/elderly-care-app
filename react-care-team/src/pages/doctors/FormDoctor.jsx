@@ -1,0 +1,1 @@
+// Doctor.create!(first_name: "Mitch", last_name: "Karl", phone: "561-392-9214", specialty: "General Practitioner", next_steps: "follow up in 6 months", address: "880 North West 13th St, Suite 1B, Boca Raton, FL 33486", website: "www.drkarlcares.com")
