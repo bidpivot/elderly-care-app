@@ -8,6 +8,14 @@ class Api::V1::AppointmentsController < ApplicationController
     render json: @appointments
   end
 
+  def appt_list
+    @appointments = Appointment.all
+    @appointments_list = @appointments.map do |appt|
+      item = {time: appt.date_and_time, doctor: appt.doctor_lastname, specialty: appt.doctor.specialty}
+    end
+    render json: @appointments_list
+  end
+
   # GET /appointments/1
   # GET /appointments/1.json
   def show

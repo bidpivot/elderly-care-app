@@ -43,7 +43,7 @@ class Api::V1::DoctorsController < ApplicationController
 
   # PATCH/PUT /doctors/1
   def update
-    if @doctor.update(doctor_params)!
+    if @doctor.update(doctor_params)
       render json: @doctor
     else
       render json: @doctor.errors, status: :unprocessable_entity

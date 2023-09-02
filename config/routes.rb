@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :notes
       resources :appointments
       resources :tasks
+      get '/appointmentslist', to: 'appointments#appt_list'
     end
   end
 
