@@ -87,14 +87,34 @@ button:focus-visible {
 
 .relevant-info-doctor {
   background-color: #213547;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 15px;
 }
 
-form {
+/* form {
   display: block;
   margin: 0 auto;
   max-width: 500px;
   padding: 0 1em;
   align-items: start;
+} */
+
+.form-appointment-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.appointment-form-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 20px;
 }
 
 /* Header  */
@@ -113,4 +133,17 @@ form {
 #dash-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+.doctor-page-container {
+  display: grid;
+  grid-template-columns: minmax(auto, 400px) 1fr;
+  grid-template-areas:
+    "image info"
+    "profile appts";
+  gap: 20px;
+}
+
+.profile-doctor {
+  grid-area: profile;
 }

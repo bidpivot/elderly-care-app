@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../../helpers/AppContext";
 import FormAppointment from "../appointments/FormAppointment.jsx";
+import DocProfilePic from "../../components/DocProfilePic";
+import michell_karl from "../../assets/michell_karl.jpg";
 
 export default function DoctorDetails() {
   const context = useContext(AppContext);
@@ -99,8 +101,12 @@ export default function DoctorDetails() {
   }
 
   return (
-    <>
-      <h1>Dr. {`${doctor.first_name} ${doctor.last_name}`}</h1>
+    <div className="doctor-page-container">
+      <div>
+        <h1>Dr. {`${doctor.first_name} ${doctor.last_name}`}</h1>
+        {<DocProfilePic image={michell_karl} />}
+      </div>
+
       <div className="profile-doctor">
         <h3>Profile</h3>
         <div className="profile-content">
@@ -140,8 +146,7 @@ export default function DoctorDetails() {
               })}
           </tbody>
         </table>
-      </div>
-      <div>
+
         {!creatingForm && (
           <button onClick={() => setCreatingForm(true)}>
             Create Appointment
@@ -161,6 +166,6 @@ export default function DoctorDetails() {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }
