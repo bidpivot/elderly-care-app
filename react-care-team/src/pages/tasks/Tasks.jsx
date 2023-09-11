@@ -117,7 +117,9 @@ export default function Tasks() {
     <div>
       <h1>List of Tasks</h1>
       {!creating && (
-        <button onClick={handleCreateClick}>Create New Task</button>
+        <button onClick={handleCreateClick} className="btn btn-cta">
+          Create New Task
+        </button>
       )}
       {creating && (
         <FormTask
@@ -153,7 +155,10 @@ export default function Tasks() {
                   <td>{task.status}</td>
                   <td>{task.task_type}</td>
                   <td>
-                    <button onClick={() => handleDeleteClick(task.id)}>
+                    <button
+                      onClick={() => handleDeleteClick(task.id)}
+                      className="btn btn-link"
+                    >
                       delete
                     </button>
                     {/*

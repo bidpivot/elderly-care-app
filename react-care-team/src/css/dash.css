@@ -1,0 +1,11 @@
+#dash-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 37.5rem) {
+  #dash-container {
+    grid-template-columns: 1fr;
+    background-color: black;
+  }
+}

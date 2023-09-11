@@ -1,0 +1,12 @@
+/* Header  */
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 20px;
+}
+
+.container-header-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
