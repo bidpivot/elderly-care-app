@@ -8,13 +8,15 @@ import Tasks from "./pages/tasks/Tasks";
 import Header from "./components/Header";
 import Dash from "./pages/dash/Dash";
 import cat3 from "./assets/cat3.png";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <AppProvider>
       <BrowserRouter>
-        <Header image={cat3} />
+        {/* <Header image={cat3} /> */}
         <Routes>
+          <Route path="/" element={<Home />}></Route>
           <Route path="/doctors" element={<Doctors />}></Route>
           <Route path="/doctors/:id" element={<DoctorDetails />}></Route>
           <Route path="/prescriptions" element={<Prescriptions />}></Route>

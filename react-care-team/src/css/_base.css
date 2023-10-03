@@ -1,132 +1,66 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --primary: #ffe900;
+  --dark-blue: #130c24;
+  --black: #232020;
+  --gray: #999999;
+  --beige: #f5f5f1;
+  --gap: 80px;
 
-  color-scheme: light dark;
-  /* background-color: white; */
-  color: rgba(255, 255, 255, 0.87);
-  background-image: linear-gradient(
-    109.6deg,
-    rgba(61, 245, 167, 1) 11.2%,
-    rgba(9, 111, 224, 1) 91.1%
-  );
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+  /* theme dependent variables */
+  --text-color: white;
+  --light-icon: white;
+  --gray-dark: #666666;
+  --gray-light: #bdbdbd;
+  --dark-icon: var(--black);
+  --anchor-color: var(--primary);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+* {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+html {
+  background-color: var(--dark-blue);
+  color: var(--text-color);
+}
+
+html.light-theme {
+  background-color: var(--beige);
+  --text-color: var(--black);
+  --gray-light: var(--gray-dark);
+  --light-icon: var(--black);
+  --dark-icon: white;
+  --anchor-color: var(--black);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
+  font-family: "Poppins", sans-serif;
   margin: 0;
-  display: block;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+input,
+textarea,
+button,
+select {
+  font: inherit;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+::selection {
+  background-color: var(--primary);
+  color: var(--black);
 }
 
-@media (prefers-color-scheme: light) {
+@media (max-width: 37.5rem) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --gap: 30px;
   }
-  a:hover {
-    color: #747bff;
+  html {
+    font-size: 70%; /* as long as the smallest font is still legible */
   }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-.profile-doctor {
-  background-color: #213547;
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 0px 15px;
-  display: grid;
-}
-
-.profile-content {
-  background-color: #535bf2;
-  margin: 20px;
-  text-align: start;
-}
-
-.relevant-info-doctor {
-  background-color: #213547;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 10px 15px;
-}
-
-/* form {
-  display: block;
-  margin: 0 auto;
-  max-width: 500px;
-  padding: 0 1em;
-  align-items: start;
-} */
-
-.form-appointment-container {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-.appointment-form-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  gap: 20px;
-}
-
-.doctor-page-container {
-  display: grid;
-  grid-template-columns: minmax(auto, 400px) 1fr;
-  grid-template-areas:
-    "image info"
-    "profile appts";
-  gap: 20px;
-}
-
-.profile-doctor {
-  grid-area: profile;
 }
