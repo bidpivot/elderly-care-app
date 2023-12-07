@@ -2,3 +2,7 @@
 @import url("css/header.css");
 @import url("css/dash.css");
 @import url("css/button.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

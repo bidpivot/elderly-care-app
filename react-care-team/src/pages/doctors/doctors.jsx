@@ -17,11 +17,13 @@ function Doctors() {
   }, []);
 
   return (
-    <div>
-      Current Doctors
-      {doctors.map(doctor => (
-        <DoctorCard key={doctor.id} info={doctor} />
-      ))}
+    <div className="p-4">
+      <h2 className="text-lg font-semibold mb-4">Current Doctors</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {doctors.map(doctor => (
+          <DoctorCard key={doctor.id} info={doctor} />
+        ))}
+      </div>
     </div>
   );
 }

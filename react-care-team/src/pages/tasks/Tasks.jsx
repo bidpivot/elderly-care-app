@@ -114,67 +114,84 @@ export default function Tasks() {
   }
 
   return (
-    <div>
-      <h1>List of Tasks</h1>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">List of Tasks</h1>
       {!creating && (
-        <button onClick={handleCreateClick} className="btn btn-cta">
+        <button
+          onClick={handleCreateClick}
+          className="px-4 py-2 bg-blue-500 text-white rounded shadow"
+        >
           Create New Task
         </button>
       )}
       {creating && (
-        <FormTask
-          validation={validation}
-          title={title}
-          onTitleChange={event => setTitle(event.target.value)}
-          due={due}
-          onDueChange={event => setDue(event.target.value)}
-          taskType={taskType}
-          onTaskTypeChange={event => setTaskType(event.target.value)}
-          status={status}
-          onStatusChange={event => setStatus(event.target.value)}
-          content={content}
-          onContentChange={event => setContent(event.target.value)}
-          onFormSubmit={handleFormSubmit}
-          onCancelClick={handleCancelClick}
-        />
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+            >
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <FormTask
+                // ... all your props ...
+                />
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  onClick={handleCancelClick}
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
-      <table>
-        <tbody>
-          <tr>
-            <th>Task</th>
-            <th>Due Date</th>
-            <th>Status</th>
-            <th>Task Type</th>
-          </tr>
-          {tasks &&
-            tasks.map(task => {
-              return (
-                <tr key={task.id}>
-                  <td>{task.title}</td>
-                  <td>{task.due}</td>
-                  <td>{task.status}</td>
-                  <td>{task.task_type}</td>
-                  <td>
-                    <button
-                      onClick={() => handleDeleteClick(task.id)}
-                      className="btn btn-link"
-                    >
-                      delete
-                    </button>
-                    {/*
-                    -find id of this task
-                    -create HandleDeleteClick function that does the following:
-                      -removes task from tasks state
-                      -delete request to database with this id
-                    -add onClick event to button that calls the HandleDeleteClick function with id as parameter
-                    */}
-                  </td>
-                </tr>
-              );
-            })}
-          <tr></tr>
-        </tbody>
-      </table>
+      <div className="max-h-64 overflow-auto">
+        <table className="w-full text-left border-collapse mt-4">
+          <thead>
+            <tr className="border-b">
+              <th className="py-4 px-6">Task</th>
+              <th className="py-4 px-6">Due Date</th>
+              <th className="py-4 px-6">Status</th>
+              <th className="py-4 px-6">Task Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tasks &&
+              tasks.map(task => {
+                return (
+                  <tr key={task.id} className="border-b">
+                    <td className="py-4 px-6">{task.title}</td>
+                    <td className="py-4 px-6">{task.due}</td>
+                    <td className="py-4 px-6">{task.status}</td>
+                    <td className="py-4 px-6">{task.task_type}</td>
+                    <td className="py-4 px-6">
+                      <button
+                        onClick={() => handleDeleteClick(task.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

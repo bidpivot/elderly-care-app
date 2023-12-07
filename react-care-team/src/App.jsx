@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 function App() {
   return (
     <AppProvider>
+      <Header />
       <BrowserRouter>
         {/* <Header image={cat3} /> */}
         <Routes>

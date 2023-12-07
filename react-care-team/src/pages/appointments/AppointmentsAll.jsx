@@ -1,3 +1,4 @@
+import { dateFormatter } from "../../helpers/dateFormatter";
 import { useEffect, useState } from "react";
 
 export default function AppointmentsAll() {
@@ -15,26 +16,34 @@ export default function AppointmentsAll() {
         setAppointments(data);
       })
       .catch(error => console.log(error));
-  }, [appointments]);
+  }, []);
 
   return (
-    <div id="appointments-container">
-      <h3>Upcoming Appointments</h3>
-      <table>
-        <tr>
-          <th>Date</th>
-          <th>Doctor</th>
-          <th>Specialty</th>
-        </tr>
-        {appointments.map(appt => {
-          return (
-            <tr>
-              <td>{appt.time}</td>
-              <td>{appt.doctor}</td>
-              <td>{appt.specialty}</td>
-            </tr>
-          );
-        })}
+    <div className="p-4">
+      <h3 className="text-lg font-semibold mb-2">Upcoming Appointments</h3>
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="border-b">
+            <th className="py-4 px-6">Date</th>
+            <th className="py-4 px-6">Time</th>
+            <th className="py-4 px-6">Doctor</th>
+            <th className="py-4 px-6">Specialty</th>
+          </tr>
+        </thead>
+        <tbody>
+          {appointments.map(appt => {
+            const { formattedDate, formattedTime } = dateFormatter(appt.time);
+
+            return (
+              <tr key={appt.id} className="border-b">
+                <td className="py-4 px-6">{formattedDate}</td>
+                <td className="py-4 px-6">{formattedTime}</td>
+                <td className="py-4 px-6">{appt.doctor}</td>
+                <td className="py-4 px-6">{appt.specialty}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );

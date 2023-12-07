@@ -17,32 +17,38 @@ function Prescriptions() {
   }, []);
 
   return (
-    <div>
-      <h1>Current Prescriptions</h1>
-      <table>
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <th>Purpose</th>
-            <th>Total Daily Dosage</th>
-            <th>Frequency</th>
-            <th>Presribing Doctor</th>
-            <th>Status</th>
-            <th>Date Ended</th>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Current Prescriptions</h1>
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="border-b">
+            <th className="py-4 px-6">Name</th>
+            <th className="py-4 px-6">Purpose</th>
+            <th className="py-4 px-6">Total Daily Dosage</th>
+            <th className="py-4 px-6">Frequency</th>
+            <th className="py-4 px-6">Presribing Doctor</th>
+            <th className="py-4 px-6">Status</th>
+            <th className="py-4 px-6">Date Ended</th>
           </tr>
+        </thead>
+        <tbody>
           {prescriptions.map(prescription => {
             return (
-              <tr key={prescription.id}>
-                <td>{prescription.name}</td>
-                <td>{prescription.purpose}</td>
-                <td>{prescription.dosage}</td>
-                <td>{prescription.frequency}</td>
-                <td>
+              <tr key={prescription.id} className="border-b">
+                <td className="py-4 px-6">{prescription.name}</td>
+                <td className="py-4 px-6">{prescription.purpose}</td>
+                <td className="py-4 px-6">{prescription.dosage}</td>
+                <td className="py-4 px-6">{prescription.frequency}</td>
+                <td className="py-4 px-6">
                   {prescription.doctor.last_name} (
                   {prescription.doctor.specialty})
                 </td>
-                <td>{prescription.status ? "active" : "ended"}</td>
-                <td>{prescription.status ? "active" : prescription.ended}</td>
+                <td className="py-4 px-6">
+                  {prescription.status ? "active" : "ended"}
+                </td>
+                <td className="py-4 px-6">
+                  {prescription.status ? "active" : prescription.ended}
+                </td>
               </tr>
             );
           })}
