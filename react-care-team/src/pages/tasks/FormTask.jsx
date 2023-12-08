@@ -1,12 +1,66 @@
 import { useState } from "react";
 
 export default function FormTask(props) {
-  // console.log(`FormTask component called`);
+  const [title, setTitle] = useState("");
+  const [due, setDue] = useState("");
+  const [status, setStatus] = useState("");
+  const [taskType, setTaskType] = useState("");
+  const [content, setContent] = useState("");
+  const [validation, setValidation] = useState("");
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+
+    if (!title) {
+      setValidation("Title is required");
+      return;
+    }
+    if (!due) {
+      setValidation("Due date is required");
+      return;
+    }
+    if (!status) {
+      setValidation("Status is required");
+      return;
+    }
+    if (!taskType) {
+      setValidation("Task type is required");
+      return;
+    }
+
+    fetch("http://localhost:3000/api/v1/tasks", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: title,
+        due: due,
+        status: status,
+        task_type: taskType,
+        content: content,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          console.log(data);
+          // setTasks([...tasks, data.data]);
+          props.handleClose();
+          setDue("");
+          setStatus("");
+          setTaskType("");
+          setTitle("");
+          setContent("");
+          setValidation("");
+        }
+      })
+      .catch(error => console.log({ error }));
+  }
+
   return (
     <div className="p-4">
       <form
         action="/api/v1/tasks"
-        onSubmit={props.onFormSubmit}
+        onSubmit={handleFormSubmit}
         className="space-y-4"
       >
         <div>
@@ -18,14 +72,13 @@ export default function FormTask(props) {
           </label>
           <input
             name="title"
-            value={props.title}
+            value={title}
             type="text"
-            onChange={props.onTitleChange}
+            onChange={e => setTitle(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           />
         </div>
 
-        <label htmlFor="due">Due Date:</label>
         <div>
           <label
             htmlFor="due"
@@ -35,9 +88,9 @@ export default function FormTask(props) {
           </label>
           <input
             name="due"
-            value={props.due}
+            value={due}
             type="date"
-            onChange={props.onDueChange}
+            onChange={e => setDue(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           />
         </div>
@@ -51,8 +104,8 @@ export default function FormTask(props) {
           </label>
           <select
             name="task-status"
-            value={props.status}
-            onChange={props.onStatusChange}
+            value={status}
+            onChange={e => setStatus(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           >
             <option>Choose a type</option>
@@ -70,8 +123,8 @@ export default function FormTask(props) {
           </label>
           <select
             name="task-type"
-            value={props.taskType}
-            onChange={props.onTaskTypeChange}
+            value={taskType}
+            onChange={e => setTaskType(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           >
             <option>Choose a type</option>
@@ -88,8 +141,8 @@ export default function FormTask(props) {
           cols="30"
           rows="10"
           placeholder="additional notes (optional)"
-          value={props.content}
-          onChange={props.onContentChange}
+          value={content}
+          onChange={e => setContent(e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         ></textarea>
 
@@ -111,7 +164,6 @@ export default function FormTask(props) {
           className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         />
       </form>
-      <button onClick={props.onCancelClick}>Cancel</button>
     </div>
   );
 }

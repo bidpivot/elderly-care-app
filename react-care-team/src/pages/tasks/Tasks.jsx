@@ -4,12 +4,6 @@ import FormTask from "./FormTask";
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [creating, setCreating] = useState(false);
-  const [title, setTitle] = useState("");
-  const [due, setDue] = useState("");
-  const [status, setStatus] = useState("");
-  const [taskType, setTaskType] = useState("");
-  const [content, setContent] = useState("");
-  const [validation, setValidation] = useState("");
 
   // I create a  state for all tasks that will be fetched on load and when there is a change to the tasks state
   // I create a state for creating a new task
@@ -17,6 +11,10 @@ export default function Tasks() {
   // onsubmit of the form, I add a useEffect that will posts the values of the form to the api
   // if successful, I will set the tasks again with the pervious tasks and the new task
   // since my tasks state is going to fetch on every change to tasks, there will be a new get fetch to the api?  probably not optimal
+
+  function handleClose() {
+    setCreating(false);
+  }
 
   useEffect(() => {
     fetch("http://localhost:3000/api/v1/tasks")
@@ -55,64 +53,6 @@ export default function Tasks() {
       .catch(error => console.log(error));
   }
 
-  function handleFormSubmit(event) {
-    event.preventDefault();
-
-    if (!title) {
-      setValidation("Title is required");
-      return;
-    }
-    if (!due) {
-      setValidation("Due date is required");
-      return;
-    }
-    if (!status) {
-      setValidation("Status is required");
-      return;
-    }
-    if (!taskType) {
-      setValidation("Task type is required");
-      return;
-    }
-
-    fetch("http://localhost:3000/api/v1/tasks", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: title,
-        due: due,
-        status: status,
-        task_type: taskType,
-        content: content,
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data) {
-          console.log(data);
-          setTasks([...tasks, data.data]);
-          setCreating(false);
-          setDue("");
-          setStatus("");
-          setTaskType("");
-          setTitle("");
-          setContent("");
-          setValidation("");
-        }
-      })
-      .catch(error => console.log({ error }));
-  }
-
-  function handleCancelClick() {
-    setDue("");
-    setStatus("");
-    setTaskType("");
-    setTitle("");
-    setContent("");
-    setCreating(false);
-    setValidation("");
-  }
-
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">List of Tasks</h1>
@@ -143,13 +83,11 @@ export default function Tasks() {
 
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <FormTask
-                // ... all your props ...
-                />
+                <FormTask creating={creating} handleClose={handleClose} />
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
-                  onClick={handleCancelClick}
+                  onClick={handleClose}
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >
                   Close
