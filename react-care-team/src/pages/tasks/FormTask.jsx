@@ -1,6 +1,9 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+const baseUrl = import.meta.env.VITE_REACT_APP_PROJECT_URL;
 
 export default function FormTask(props) {
+  const queryClient = useQueryClient();
   const [title, setTitle] = useState("");
   const [due, setDue] = useState("");
   const [status, setStatus] = useState("");
@@ -8,27 +11,18 @@ export default function FormTask(props) {
   const [content, setContent] = useState("");
   const [validation, setValidation] = useState("");
 
-  function handleFormSubmit(event) {
-    event.preventDefault();
-
-    if (!title) {
-      setValidation("Title is required");
-      return;
-    }
-    if (!due) {
-      setValidation("Due date is required");
-      return;
-    }
-    if (!status) {
-      setValidation("Status is required");
-      return;
-    }
-    if (!taskType) {
-      setValidation("Task type is required");
-      return;
-    }
-
-    fetch("http://localhost:3000/api/v1/tasks", {
+  // this is the mutation that I want to use to create a task
+  const postTask = useMutation({
+    mutationFn: () => createTask(),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tasks"]);
+    },
+  });
+  // This function below serves as the mutation function for the postTask mutation
+  // keeping it in the same file for now but I want to refactor this and make it more modular
+  function createTask() {
+    console.log("FETCH: creating task");
+    fetch(`${baseUrl}/tasks`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -54,6 +48,28 @@ export default function FormTask(props) {
         }
       })
       .catch(error => console.log({ error }));
+  }
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+
+    if (!title) {
+      setValidation("Title is required");
+      return;
+    }
+    if (!due) {
+      setValidation("Due date is required");
+      return;
+    }
+    if (!status) {
+      setValidation("Status is required");
+      return;
+    }
+    if (!taskType) {
+      setValidation("Task type is required");
+      return;
+    }
+    postTask.mutate(); // refactor this so it receives the form data as an argument. take form data out of createTask function
   }
 
   return (

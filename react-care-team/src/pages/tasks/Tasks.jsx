@@ -1,69 +1,52 @@
 import { useEffect, useState } from "react";
 import FormTask from "./FormTask";
+import { useQuery } from "@tanstack/react-query";
+import fetchTasks from "../../helpers/fetchTasks";
+import { useDeleteTask } from "../../hooks/useTasks";
+
+const baseUrl = import.meta.env.VITE_REACT_APP_PROJECT_URL;
 
 export default function Tasks() {
-  const [tasks, setTasks] = useState([]);
+  // const [tasks, setTasks] = useState([]);
   const [creating, setCreating] = useState(false);
+  const {
+    isLoading,
+    error,
+    data: tasks,
+  } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: () => fetchTasks(),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
-  // I create a  state for all tasks that will be fetched on load and when there is a change to the tasks state
-  // I create a state for creating a new task
-  // I create a state for all of the inputs to the form
-  // onsubmit of the form, I add a useEffect that will posts the values of the form to the api
-  // if successful, I will set the tasks again with the pervious tasks and the new task
-  // since my tasks state is going to fetch on every change to tasks, there will be a new get fetch to the api?  probably not optimal
+  const deleteTaskQuery = useDeleteTask(); // pass in the id when you call mutate
 
   function handleClose() {
     setCreating(false);
   }
 
-  useEffect(() => {
-    fetch("http://localhost:3000/api/v1/tasks")
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data);
-        if (data) {
-          setTasks(data);
-        }
-      })
-      .catch(error => console.log(error));
-  }, []);
-
   function handleCreateClick() {
     setCreating(true);
   }
 
-  useEffect(() => {
-    console.log({ tasks });
-  }, [tasks]);
+  useEffect(() => console.log({ tasks }), [tasks]); // delete this later
 
-  function handleDeleteClick(id) {
-    // first delete task from database
-    // then delete it from state when you have confirmation of deletion from the db
-    fetch(`http://localhost:3000/api/v1/tasks/${id}`, { method: "DELETE" })
-      .then(response => response.json()) // why was this raising error with react console?
-      .then(data => {
-        console.log(data);
-        const updatedTasks = tasks.filter(task => {
-          console.log(task.id);
-          console.log(data.deleted_task_id);
-          return task.id !== data.deleted_task_id;
-        });
-        setTasks(updatedTasks);
-      })
-      .catch(error => console.log(error));
-  }
+  //  this JSX below is too big. need to refactor
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">List of Tasks</h1>
-      {!creating && (
-        <button
-          onClick={handleCreateClick}
-          className="px-4 py-2 bg-blue-500 text-white rounded shadow"
-        >
-          Create New Task
-        </button>
-      )}
+      <div className="flex justify-between mb-4">
+        <h1 className="text-2xl font-bold mb-4">List of Tasks</h1>
+        {!creating && (
+          <button
+            onClick={handleCreateClick}
+            className="px-4 py-2 bg-blue-500 text-white rounded shadow"
+          >
+            Create New Task
+          </button>
+        )}
+      </div>
       {creating && (
         <div className="fixed z-10 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -118,7 +101,7 @@ export default function Tasks() {
                     <td className="py-4 px-6">{task.task_type}</td>
                     <td className="py-4 px-6">
                       <button
-                        onClick={() => handleDeleteClick(task.id)}
+                        onClick={() => deleteTaskQuery.mutate(task.id)}
                         className="text-red-500 hover:text-red-700"
                       >
                         delete
