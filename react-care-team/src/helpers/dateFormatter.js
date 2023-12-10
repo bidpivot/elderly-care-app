@@ -3,7 +3,7 @@ export function dateFormatter(dateTime) {
   const formattedDate = date.toLocaleString("en-US", {
     month: "short",
     day: "2-digit",
-    year: "2-digit",
+    year: "numeric",
   });
   const formattedTime = date.toLocaleString("en-US", {
     hour: "2-digit",

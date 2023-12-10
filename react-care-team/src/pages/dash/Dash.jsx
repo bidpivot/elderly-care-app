@@ -2,19 +2,23 @@
 import Prescriptions from "../prescriptions/Prescriptions";
 import Tasks from "../tasks/Tasks";
 import AppointmentsAll from "../appointments/AppointmentsAll";
+import NavBar from "../../components/NavBar";
 
 export default function Dash() {
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
+    <div className="p-4 bg-gray-100 min-h-screen flex">
+      <div className="hidden lg:block max-w-sm">
+        <NavBar />
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="p-4 bg-white rounded shadow lg:col-span-2">
-          <Prescriptions />
-        </div>
         <div className="p-4 bg-white rounded shadow">
           <Tasks />
         </div>
-        <div className="p-4 bg-white rounded shadow">
+        <div className="p-4 bg-white rounded shadow overflow-y-auto">
           <AppointmentsAll />
+        </div>
+        <div className="p-4 bg-white rounded shadow overflow-x-auto lg:col-span-2">
+          <Prescriptions />
         </div>
       </div>
     </div>

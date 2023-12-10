@@ -1,27 +1,40 @@
 import { dateFormatter } from "../../helpers/dateFormatter";
 import { useEffect, useState } from "react";
+import { get } from "../../helpers/useFetch";
+import { useQuery } from "@tanstack/react-query";
+import FormAppointment from "./FormAppointment";
 
 export default function AppointmentsAll() {
-  const [appointments, setAppointments] = useState([]);
+  const [creating, setCreating] = useState(false);
 
-  useEffect(() => {
-    console.log(appointments);
-  }, [appointments]);
+  const { data: appointments, isLoading } = useQuery({
+    queryKey: ["appointments"],
+    queryFn: () => get("/appointmentslist"),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
-  useEffect(() => {
-    fetch("http://localhost:3000/api/v1/appointmentslist")
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data);
-        setAppointments(data);
-      })
-      .catch(error => console.log(error));
-  }, []);
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">Upcoming Appointments</h3>
-      <table className="w-full text-left border-collapse">
+      <div className="flex justify-between">
+        <h3 className="text-lg font-semibold mb-2">Upcoming Appointments</h3>
+
+        <button
+          onClick={() => setCreating(true)}
+          className="px-4 py-2 bg-blue-500 text-white rounded shadow"
+        >
+          Create New Event
+        </button>
+      </div>
+      {creating && (
+        <FormAppointment
+          onClose={() => setCreating(false)}
+          creating={creating}
+        />
+      )}
+      <table className="w-full text-left border-collapse ">
         <thead>
           <tr className="border-b">
             <th className="py-4 px-6">Date</th>
@@ -31,18 +44,19 @@ export default function AppointmentsAll() {
           </tr>
         </thead>
         <tbody>
-          {appointments.map(appt => {
-            const { formattedDate, formattedTime } = dateFormatter(appt.time);
+          {appointments &&
+            appointments.map(appt => {
+              const { formattedDate, formattedTime } = dateFormatter(appt.time);
 
-            return (
-              <tr key={appt.id} className="border-b">
-                <td className="py-4 px-6">{formattedDate}</td>
-                <td className="py-4 px-6">{formattedTime}</td>
-                <td className="py-4 px-6">{appt.doctor}</td>
-                <td className="py-4 px-6">{appt.specialty}</td>
-              </tr>
-            );
-          })}
+              return (
+                <tr key={appt.id} className="border-b">
+                  <td className="py-4 px-6">{formattedDate}</td>
+                  <td className="py-4 px-6">{formattedTime}</td>
+                  <td className="py-4 px-6">{appt.doctor}</td>
+                  <td className="py-4 px-6">{appt.specialty}</td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>

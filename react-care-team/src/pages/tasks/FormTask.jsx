@@ -149,7 +149,7 @@ export default function FormTask(props) {
           </select>
         </div>
 
-        <div className="text-red-500">{props.validation}</div>
+        <div className="text-red-500">{validation}</div>
 
         <textarea
           name="text-content"
