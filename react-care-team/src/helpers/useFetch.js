@@ -2,9 +2,10 @@ const baseUrl = import.meta.env.VITE_REACT_APP_PROJECT_URL;
 
 export async function get(endpoint) {
   try {
+    console.log(`FETCH: get ${endpoint}`)
     const response = await fetch(baseUrl + endpoint);
     const data = await response.json();
-    console.log({ data });
+    console.log(endpoint, { data });
     return data;
   } catch (error) {
     console.log(error);
