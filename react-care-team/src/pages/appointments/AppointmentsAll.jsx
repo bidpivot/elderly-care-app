@@ -8,16 +8,17 @@ export default function AppointmentsAll() {
   const [creating, setCreating] = useState(false);
 
   const { data: appointments, isLoading } = useQuery({
-    queryKey: ["appointments"],
-    queryFn: () => get("/appointmentslist"),
+    queryKey: ["upcoming_appointments"],
+    queryFn: () => get("/appointments/upcoming"),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
 
   if (isLoading) return <div>Loading...</div>;
 
+  if (!appointments) return <div>No appointments found.</div>;
   return (
-    <div className="p-4">
+    <div className="p-4 ">
       <div className="flex justify-between">
         <h3 className="text-lg font-semibold mb-2">Upcoming Appointments</h3>
 
@@ -34,7 +35,7 @@ export default function AppointmentsAll() {
           creating={creating}
         />
       )}
-      <table className="w-full text-left border-collapse ">
+      <table className="w-full text-left border-collapse max-h-96">
         <thead>
           <tr className="border-b">
             <th className="py-4 px-6">Date</th>

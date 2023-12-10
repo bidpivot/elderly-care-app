@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { get } from "../../helpers/useFetch";
+import { useQuery } from "@tanstack/react-query";
 
 function Prescriptions() {
-  const [prescriptions, setPrescriptions] = useState([]);
+  const { data: prescriptions, isLoading } = useQuery({
+    queryKey: ["prescriptions"],
+    queryFn: () => get("/prescriptions"),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:3000/api/v1/prescriptions")
-      .then(response => response.json())
-      .then(data => {
-        console.log(data.error); // likely have to create state for doctors and set it with data response
-        if (data) {
-          console.log(data.doctor);
-          setPrescriptions(data);
-        }
-      })
-      .catch(error => console.log(error));
-  }, []);
+  if (isLoading) return <div>Loading...</div>;
 
+  if (!prescriptions) return <div>No prescriptions found.</div>;
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Current Prescriptions</h1>

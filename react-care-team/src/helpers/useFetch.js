@@ -3,28 +3,12 @@ const baseUrl = import.meta.env.VITE_REACT_APP_PROJECT_URL;
 export async function get(endpoint) {
   try {
     const response = await fetch(baseUrl + endpoint);
-    const data = response.json();
+    const data = await response.json();
     console.log({ data });
     return data;
   } catch (error) {
     console.log(error);
   }
-  // return new Promise((resolve, reject) => {
-  //   fetch(baseUrl + url)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       if (!data) {
-  //         setLoading(false);
-  //         return reject(data);
-  //       }
-  //       setLoading(false);
-  //       resolve(data);
-  //     })
-  //     .catch(error => {
-  //       setLoading(false);
-  //       reject(error);
-  //     });
-  // });
 }
 
 export async function post(endpoint, body) {

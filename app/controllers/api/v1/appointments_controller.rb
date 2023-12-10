@@ -16,6 +16,15 @@ class Api::V1::AppointmentsController < ApplicationController
     render json: @appointments_list
   end
 
+  # get /appointments/upcoming
+  def upcoming_appointments
+    @upcoming_appointments = Appointment.where('date_and_time >= ?', Date.today).order(:date)
+    @formatted_upcoming_appointments = @upcoming_appointments.map do |appt|
+      item = {time: appt.date_and_time, doctor: appt.doctor_lastname, specialty: appt.doctor.specialty}
+    end
+    render json: @formatted_upcoming_appointments
+  end
+
   # GET /appointments/1
   # GET /appointments/1.json
   def show

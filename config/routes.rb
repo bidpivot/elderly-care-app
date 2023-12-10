@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       resources :doctors
       resources :prescriptions
       resources :notes
+      get '/appointments/upcoming', to: 'appointments#upcoming_appointments'
       resources :appointments
       resources :tasks
       get '/appointmentslist', to: 'appointments#appt_list'
