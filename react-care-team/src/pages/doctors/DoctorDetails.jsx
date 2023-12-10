@@ -4,12 +4,27 @@ import { AppContext } from "../../helpers/AppContext";
 import FormAppointment from "../appointments/FormAppointment.jsx";
 import DocProfilePic from "../../components/DocProfilePic";
 import michell_karl from "../../assets/michell_karl.jpg";
+import { get } from "../../helpers/useFetch.js";
+import { useQuery } from "@tanstack/react-query";
 
 export default function DoctorDetails() {
   const context = useContext(AppContext);
   const params = useParams();
-  const [doctor, setDoctor] = useState({});
-  const [apptsHistory, setApptsHistory] = useState([]);
+  const { data: doctor, isLoading } = useQuery({
+    queryKey: ["doctor", params.id],
+    queryFn: () => get(`/doctors/${params.id}`),
+    enabled: !!params.id,
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!doctor) {
+    return <div>Doctor not found</div>;
+  }
+  const apptsHistory = doctor?.appts_history;
+  // const [apptsHistory, setApptsHistory] = useState();
   // const [allAppts, setAllAppts] = useState([]);
   const [creatingForm, setCreatingForm] = useState(false);
   const [apptDate, setApptDate] = useState("");
@@ -28,20 +43,16 @@ export default function DoctorDetails() {
     return utcDate.toISOString(); // Store this UTC date on the server
   }
 
-  useEffect(() => {
-    console.log(apptDate);
-  }, [apptDate]);
-
-  useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/doctors/${params.id}`)
-      .then(r => r.json())
-      .then(data => {
-        console.log(data.appts_history);
-        setDoctor(data);
-        setApptsHistory(data.appts_history);
-      })
-      .catch(error => console.error(error));
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://localhost:3000/api/v1/doctors/${params.id}`)
+  //     .then(r => r.json())
+  //     .then(data => {
+  //       console.log(data.appts_history);
+  //       setDoctor(data);
+  //       setApptsHistory(data.appts_history);
+  //     })
+  //     .catch(error => console.error(error));
+  // }, []);
 
   function handleDeleteClick(id) {
     fetch(`http://localhost:3000/api/v1/appointments/${id}`, {
@@ -103,12 +114,14 @@ export default function DoctorDetails() {
   return (
     <div className="doctor-page-container">
       <div>
-        <h1>Dr. {`${doctor.first_name} ${doctor.last_name}`}</h1>
+        <h1 className="text-2xl font-bold">
+          Dr. {`${doctor.first_name} ${doctor.last_name}`}
+        </h1>
         {<DocProfilePic image={michell_karl} />}
       </div>
 
       <div className="profile-doctor">
-        <h3>Profile</h3>
+        <h3 className="text-lg font-bold">Profile</h3>
         <div className="profile-content">
           <p>Specialty: {doctor.specialty}</p>
           <p>Phone Number: {doctor.phone}</p>
@@ -117,7 +130,7 @@ export default function DoctorDetails() {
         </div>
       </div>
       <div className="relevant-info-doctor">
-        <h3>Important Info</h3>
+        <h3 className="text-lg font-bold">Important Info</h3>
         <p>Next Steps: {doctor.next_steps}</p>
         <p>
           Next Appt: {nextAppt ? nextApptDate : "No Scheduled Appointments"}
@@ -125,11 +138,11 @@ export default function DoctorDetails() {
         <p>Last Appt: {lastAppt ? lastApptDate : "No Appointment History"}</p>
       </div>
       <div className="table-appts">
-        <table>
+        <table className="w-full">
           <tbody>
             <tr>
-              <th>Appointment Date</th>
-              <th>Note</th>
+              <th className="py-2">Appointment Date</th>
+              <th className="py-2">Note</th>
             </tr>
 
             {apptsHistory &&
@@ -139,7 +152,12 @@ export default function DoctorDetails() {
                     <td>{context.convertRubyDate(appt.date_and_time)}</td>
                     <td>{appt.note}</td>
                     <td>
-                      <a onClick={() => handleDeleteClick(appt.id)}>delete</a>
+                      <a
+                        className="text-blue-500 cursor-pointer"
+                        onClick={() => handleDeleteClick(appt.id)}
+                      >
+                        delete
+                      </a>
                     </td>
                   </tr>
                 );
@@ -148,7 +166,10 @@ export default function DoctorDetails() {
         </table>
 
         {!creatingForm && (
-          <button onClick={() => setCreatingForm(true)}>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setCreatingForm(true)}
+          >
             Create Appointment
           </button>
         )}
