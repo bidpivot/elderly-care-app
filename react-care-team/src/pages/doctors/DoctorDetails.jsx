@@ -4,16 +4,26 @@ import { AppContext } from "../../helpers/AppContext";
 import FormAppointment from "../appointments/FormAppointment.jsx";
 import DocProfilePic from "../../components/DocProfilePic";
 import michell_karl from "../../assets/michell_karl.jpg";
-import { get } from "../../helpers/useFetch.js";
-import { useQuery } from "@tanstack/react-query";
+import { get, destroy } from "../../helpers/useFetch.js";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function DoctorDetails() {
+  const queryClient = useQueryClient();
   const context = useContext(AppContext);
   const params = useParams();
+  const doctor_id = params.id;
+  const [formOpen, setFormOpen] = useState(false);
   const { data: doctor, isLoading } = useQuery({
-    queryKey: ["doctor", params.id],
-    queryFn: () => get(`/doctors/${params.id}`),
+    queryKey: ["doctor", doctor_id],
+    queryFn: () => get(`/doctors/${doctor_id}`),
     enabled: !!params.id,
+  });
+
+  const apptDestroyQuery = useMutation({
+    mutationFn: id => destroy(`/appointments/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["doctor", doctor_id]);
+    },
   });
 
   if (isLoading) {
@@ -26,11 +36,6 @@ export default function DoctorDetails() {
   const apptsHistory = doctor?.appts_history;
   // const [apptsHistory, setApptsHistory] = useState();
   // const [allAppts, setAllAppts] = useState([]);
-  const [creatingForm, setCreatingForm] = useState(false);
-  const [apptDate, setApptDate] = useState("");
-  const [apptTime, setApptTime] = useState("");
-  const [apptNote, setApptNote] = useState("");
-  const [validation, setValidation] = useState("");
   // console.log(context);
   const nextAppt = doctor.next_appointment?.date_and_time; // defined next appt date from doctor state
   const nextApptDate = context.convertRubyDate(nextAppt); // converted it to better format with datehelper function from context
@@ -54,62 +59,42 @@ export default function DoctorDetails() {
   //     .catch(error => console.error(error));
   // }, []);
 
-  function handleDeleteClick(id) {
-    fetch(`http://localhost:3000/api/v1/appointments/${id}`, {
-      method: "DELETE",
-    })
-      .then(response => response.json()) // why was this raising error with react console?
-      .then(data => {
-        console.log(data);
-        const updatedAppointments = apptsHistory.filter(appt => {
-          // console.log(appt.id); // check to make sure appt.id is the same as deleted_appt_id
-          // console.log(data.deleted_appt_id);
-          return appt.id !== data.deleted_appt_id;
-        });
-        const sortedAppts = updatedAppointments.sort(
-          (a, b) => a.date_and_time - b.date_and_time
-        );
-        setApptsHistory(sortedAppts);
-      })
-      .catch(error => console.log(error));
-  }
+  // function handleApptSubmit(event) {
+  //   event.preventDefault();
 
-  function handleApptSubmit(event) {
-    event.preventDefault();
+  //   if (!apptDate) {
+  //     setValidation("Appointment date is required");
+  //     return;
+  //   }
+  //   // if (!apptNote) {
+  //   //   setValidation("Appointment note is required");
+  //   //   return;
+  //   // }
 
-    if (!apptDate) {
-      setValidation("Appointment date is required");
-      return;
-    }
-    // if (!apptNote) {
-    //   setValidation("Appointment note is required");
-    //   return;
-    // }
+  //   // Convert the user-selected local time to UTC
+  //   // const utcApptDate = convertToUTC(new Date(apptDate));
+  //   // console.log(utcApptDate);
 
-    // Convert the user-selected local time to UTC
-    // const utcApptDate = convertToUTC(new Date(apptDate));
-    // console.log(utcApptDate);
-
-    fetch("http://localhost:3000/api/v1/appointments", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        date_and_time: apptDate, // we might want to change this back to utcApptDate
-        note: apptNote,
-        doctor_id: doctor.id,
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        // create state for appointments and reset it with the new appointment spread into the previous array of appts
-        setCreatingForm(false);
-        setApptsHistory([...apptsHistory, data.appt]);
-      })
-      .catch(error => console.log(error));
-  }
+  //   fetch("http://localhost:3000/api/v1/appointments", {
+  //     method: "post",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       date_and_time: apptDate, // we might want to change this back to utcApptDate
+  //       note: apptNote,
+  //       doctor_id: doctor.id,
+  //     }),
+  //   })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data);
+  //       // create state for appointments and reset it with the new appointment spread into the previous array of appts
+  //       setCreatingForm(false);
+  //       setApptsHistory([...apptsHistory, data.appt]);
+  //     })
+  //     .catch(error => console.log(error));
+  // }
 
   return (
     <div className="doctor-page-container">
@@ -138,6 +123,7 @@ export default function DoctorDetails() {
         <p>Last Appt: {lastAppt ? lastApptDate : "No Appointment History"}</p>
       </div>
       <div className="table-appts">
+        <h3 className="text-lg font-bold">Appointment History</h3>
         <table className="w-full">
           <tbody>
             <tr>
@@ -154,7 +140,9 @@ export default function DoctorDetails() {
                     <td>
                       <a
                         className="text-blue-500 cursor-pointer"
-                        onClick={() => handleDeleteClick(appt.id)}
+                        // onClick={() => handleDeleteClick(appt.id)}
+                        // onClick={() => console.log("delete")}
+                        onClick={() => apptDestroyQuery.mutate(appt.id)}
                       >
                         delete
                       </a>
@@ -165,25 +153,19 @@ export default function DoctorDetails() {
           </tbody>
         </table>
 
-        {!creatingForm && (
+        {!formOpen && (
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setCreatingForm(true)}
+            onClick={() => setFormOpen(true)}
           >
             Create Appointment
           </button>
         )}
-        {creatingForm && (
+        {formOpen && (
           <FormAppointment
-            onDateChange={e => setApptDate(e.target.value)}
-            appt-date={apptDate}
-            onTimeChange={e => setApptTime(e.target.value)}
-            appt-time={apptTime}
-            onNoteChange={e => setApptNote(e.target.value)}
-            appt-note={apptNote}
-            onFormSubmit={handleApptSubmit}
-            validation={validation}
-            onCancelClick={() => setCreatingForm(false)}
+            onCancelClick={() => setFormOpen(false)}
+            formOpen={formOpen} // this is a boolean
+            doctor_id={doctor_id}
           />
         )}
       </div>
