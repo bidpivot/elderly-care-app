@@ -1,3 +1,5 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import cat3 from "../assets/cat3.png";
 export default function Header(props) {
   return (
@@ -8,7 +10,10 @@ export default function Header(props) {
       </div>
       <div className="container-header-right">
         <p>Ana (caretaker)</p>
-        <img src={props.image} height="30" width="30" />
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
       </div>
     </div>
   );

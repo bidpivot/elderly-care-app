@@ -1,11 +1,15 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { AppContext } from "../../helpers/AppContext";
 import FormAppointment from "../appointments/FormAppointment.jsx";
 import DocProfilePic from "../../components/DocProfilePic";
 import michell_karl from "../../assets/michell_karl.jpg";
 import { get, destroy } from "../../helpers/useFetch.js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { dateFormatter } from "../../helpers/dateFormatter.js";
+import DoctorLatestInfo from "./DoctorLatestInfo.jsx";
+import DoctorAddress from "./DoctorAddress.jsx";
+import { AppContext } from "../../helpers/AppContext";
+import DoctorApptHistory from "./DoctorApptHistory.jsx";
 
 export default function DoctorDetails() {
   const queryClient = useQueryClient();
@@ -19,13 +23,6 @@ export default function DoctorDetails() {
     enabled: !!params.id,
   });
 
-  const apptDestroyQuery = useMutation({
-    mutationFn: id => destroy(`/appointments/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["doctor", doctor_id]);
-    },
-  });
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -34,141 +31,33 @@ export default function DoctorDetails() {
     return <div>Doctor not found</div>;
   }
   const apptsHistory = doctor?.appts_history;
-  // const [apptsHistory, setApptsHistory] = useState();
-  // const [allAppts, setAllAppts] = useState([]);
-  // console.log(context);
-  const nextAppt = doctor.next_appointment?.date_and_time; // defined next appt date from doctor state
-  const nextApptDate = context.convertRubyDate(nextAppt); // converted it to better format with datehelper function from context
-  const lastAppt = doctor.last_appointment?.date_and_time;
-  const lastApptDate = context.convertRubyDate(lastAppt);
-
-  function convertToUTC(localDate) {
-    const utcDate = new Date(localDate);
-    utcDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
-    return utcDate.toISOString(); // Store this UTC date on the server
-  }
-
-  // useEffect(() => {
-  //   fetch(`http://localhost:3000/api/v1/doctors/${params.id}`)
-  //     .then(r => r.json())
-  //     .then(data => {
-  //       console.log(data.appts_history);
-  //       setDoctor(data);
-  //       setApptsHistory(data.appts_history);
-  //     })
-  //     .catch(error => console.error(error));
-  // }, []);
-
-  // function handleApptSubmit(event) {
-  //   event.preventDefault();
-
-  //   if (!apptDate) {
-  //     setValidation("Appointment date is required");
-  //     return;
-  //   }
-  //   // if (!apptNote) {
-  //   //   setValidation("Appointment note is required");
-  //   //   return;
-  //   // }
-
-  //   // Convert the user-selected local time to UTC
-  //   // const utcApptDate = convertToUTC(new Date(apptDate));
-  //   // console.log(utcApptDate);
-
-  //   fetch("http://localhost:3000/api/v1/appointments", {
-  //     method: "post",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       date_and_time: apptDate, // we might want to change this back to utcApptDate
-  //       note: apptNote,
-  //       doctor_id: doctor.id,
-  //     }),
-  //   })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log(data);
-  //       // create state for appointments and reset it with the new appointment spread into the previous array of appts
-  //       setCreatingForm(false);
-  //       setApptsHistory([...apptsHistory, data.appt]);
-  //     })
-  //     .catch(error => console.log(error));
-  // }
 
   return (
-    <div className="doctor-page-container">
+    <div className="p-4 bg-white shadow overflow-y-auto rounded-lg">
       <div>
         <h1 className="text-2xl font-bold">
           Dr. {`${doctor.first_name} ${doctor.last_name}`}
         </h1>
         {<DocProfilePic image={michell_karl} />}
       </div>
-
-      <div className="profile-doctor">
-        <h3 className="text-lg font-bold">Profile</h3>
-        <div className="profile-content">
-          <p>Specialty: {doctor.specialty}</p>
-          <p>Phone Number: {doctor.phone}</p>
-          <p>Address: {doctor.address}</p>
-          <p>Website: {doctor.website}</p>
-        </div>
-      </div>
-      <div className="relevant-info-doctor">
-        <h3 className="text-lg font-bold">Important Info</h3>
-        <p>Next Steps: {doctor.next_steps}</p>
-        <p>
-          Next Appt: {nextAppt ? nextApptDate : "No Scheduled Appointments"}
-        </p>
-        <p>Last Appt: {lastAppt ? lastApptDate : "No Appointment History"}</p>
-      </div>
-      <div className="table-appts">
-        <h3 className="text-lg font-bold">Appointment History</h3>
-        <table className="w-full">
-          <tbody>
-            <tr>
-              <th className="py-2">Appointment Date</th>
-              <th className="py-2">Note</th>
-            </tr>
-
-            {apptsHistory &&
-              apptsHistory.map(appt => {
-                return (
-                  <tr key={appt.id}>
-                    <td>{context.convertRubyDate(appt.date_and_time)}</td>
-                    <td>{appt.note}</td>
-                    <td>
-                      <a
-                        className="text-blue-500 cursor-pointer"
-                        // onClick={() => handleDeleteClick(appt.id)}
-                        // onClick={() => console.log("delete")}
-                        onClick={() => apptDestroyQuery.mutate(appt.id)}
-                      >
-                        delete
-                      </a>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-
-        {!formOpen && (
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setFormOpen(true)}
-          >
-            Create Appointment
-          </button>
-        )}
-        {formOpen && (
-          <FormAppointment
-            onCancelClick={() => setFormOpen(false)}
-            formOpen={formOpen} // this is a boolean
-            doctor_id={doctor_id}
-          />
-        )}
-      </div>
+      <DoctorAddress doctor={doctor} />
+      <DoctorLatestInfo doctor={doctor} />
+      <DoctorApptHistory apptsHistory={apptsHistory} context={context} />{" "}
+      {!formOpen && (
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setFormOpen(true)}
+        >
+          Create Appointment
+        </button>
+      )}
+      {formOpen && (
+        <FormAppointment
+          onCancelClick={() => setFormOpen(false)}
+          formOpen={formOpen} // this is a boolean
+          doctor_id={doctor_id}
+        />
+      )}
     </div>
   );
 }

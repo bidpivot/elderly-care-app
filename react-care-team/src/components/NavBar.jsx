@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function NavBar() {
   return (
-    <div className="hidden lg:block lg:w-64">
+    <div className="hidden max-w-sm lg:block lg:w-64 lg:p-4 bg-yellow-300 rounded-lg">
       <div className="h-full overflow-y-auto">
         <nav className="px-2 space-y-1">
           <Link
