@@ -32,7 +32,7 @@ export default function AppointmentsAll() {
       {creating && (
         <FormAppointment
           onClose={() => setCreating(false)}
-          creating={creating}
+          formOpen={creating}
         />
       )}
       <table className="w-full text-left border-collapse max-h-96">

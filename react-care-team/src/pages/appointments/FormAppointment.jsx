@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { post } from "../../helpers/useFetch.js";
 
@@ -34,16 +34,9 @@ export default function FormAppointment(props) {
       setValidation("share some detail the reason for this event");
       return;
     }
+    postAppointment.mutate();
   }
 
-  // onDateChange={e => setApptDate(e.target.value)}
-  // appt-date={apptDate}
-  // onTimeChange={e => setApptTime(e.target.value)}
-  // appt-time={apptTime}
-  // onNoteChange={e => setApptNote(e.target.value)}
-  // appt-note={apptNote}
-  // onFormSubmit={handleApptSubmit}
-  // validation={validation}
   return (
     <div
       className={`${
@@ -65,35 +58,46 @@ export default function FormAppointment(props) {
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <form onSubmit={handleFormSubmit} className="p-6">
             <div className="appointment-form-content">
-              <label htmlFor="appt-date">
-                Appointment Date:
-                <input
-                  type="date"
-                  id="appt-date"
-                  name="appt-date"
-                  onChange={e => setApptDate(e.target.value)}
-                  value={apptDate}
-                />
-              </label>
+              <div className="flex flex-col gap-4">
+                <label htmlFor="appt-date" className="block">
+                  Appointment Date:
+                  <input
+                    type="date"
+                    id="appt-date"
+                    name="appt-date"
+                    onChange={e => setApptDate(e.target.value)}
+                    value={apptDate}
+                    className="mt-1 block w-full rounded-md bg-gray-100 border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500"
+                  />
+                </label>
 
-              <label htmlFor="appt-note">
-                Notes:
-                <input
-                  type="textarea"
-                  id="appt-note"
-                  name="appt-note"
-                  onChange={e => setApptNote(e.target.value)}
-                  value={apptNote}
-                />
-              </label>
-
-              <button
-                type="button"
-                onClick={props.onCancelClick}
-                className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-              >
-                Close
-              </button>
+                <label htmlFor="appt-note" className="block">
+                  Notes:
+                  <textarea
+                    id="appt-note"
+                    name="appt-note"
+                    placeholder="Share some details about the reason for this event."
+                    onChange={e => setApptNote(e.target.value)}
+                    value={apptNote}
+                    className="mt-1 block w-full rounded-md bg-gray-100 border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500"
+                  />
+                </label>
+              </div>
+              <div className="flex justify-between">
+                <button
+                  type="button"
+                  onClick={props.onClose}
+                  className="mt-4 text-red-500 bg-transparent border-none"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
           </form>
         </div>

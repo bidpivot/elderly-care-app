@@ -1,22 +1,22 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import FormAppointment from "../appointments/FormAppointment.jsx";
 import DocProfilePic from "../../components/DocProfilePic";
 import michell_karl from "../../assets/michell_karl.jpg";
-import { get, destroy } from "../../helpers/useFetch.js";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { dateFormatter } from "../../helpers/dateFormatter.js";
+import { get } from "../../helpers/useFetch.js";
+import { useQuery } from "@tanstack/react-query";
 import DoctorLatestInfo from "./DoctorLatestInfo.jsx";
 import DoctorAddress from "./DoctorAddress.jsx";
 import { AppContext } from "../../helpers/AppContext";
 import DoctorApptHistory from "./DoctorApptHistory.jsx";
 
 export default function DoctorDetails() {
-  const queryClient = useQueryClient();
   const context = useContext(AppContext);
   const params = useParams();
   const doctor_id = params.id;
   const [formOpen, setFormOpen] = useState(false);
+
+  // react query hook that fetches the doctor's data but also related appointment data from that table
   const { data: doctor, isLoading } = useQuery({
     queryKey: ["doctor", doctor_id],
     queryFn: () => get(`/doctors/${doctor_id}`),
@@ -35,9 +35,9 @@ export default function DoctorDetails() {
   return (
     <div className="p-4 bg-white shadow overflow-y-auto rounded-lg">
       <div>
-        <h1 className="text-2xl font-bold">
+        {/* <h1 className="text-2xl font-bold">
           Dr. {`${doctor.first_name} ${doctor.last_name}`}
-        </h1>
+        </h1> */}
         {<DocProfilePic image={michell_karl} />}
       </div>
       <DoctorAddress doctor={doctor} />

@@ -13,6 +13,7 @@ export async function get(endpoint) {
 }
 
 export async function post(endpoint, body) {
+  console.log(`FETCH: post ${baseUrl}${endpoint}`);
   try {
     const response = await fetch(baseUrl + endpoint, {
       method: "post",
@@ -36,6 +37,21 @@ export async function destroy(endpoint) {
     return data;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function put(endpoint, body) {
+  try {
+    const response = await fetch(baseUrl + endpoint, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    return response.json();
+  } catch (error) {
+    console.log({ error });
   }
 }
 // return new Promise((resolve, reject) => {

@@ -28,11 +28,13 @@ class Api::V1::AppointmentsController < ApplicationController
   # GET /appointments/1
   # GET /appointments/1.json
   def show
+    render json: @appointment
   end
 
   # POST /appointments
   # POST /appointments.json
   def create
+    p appointment_params
     @appointment = Appointment.new(appointment_params)
 
     if @appointment.save!
