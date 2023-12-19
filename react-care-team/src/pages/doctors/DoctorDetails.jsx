@@ -54,6 +54,7 @@ export default function DoctorDetails() {
       {formOpen && (
         <FormAppointment
           onCancelClick={() => setFormOpen(false)}
+          onSubmitted={() => setFormOpen(false)}
           formOpen={formOpen} // this is a boolean
           doctor_id={doctor_id}
         />

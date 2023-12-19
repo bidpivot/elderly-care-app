@@ -15,12 +15,27 @@ export default function FormAppointment(props) {
     doctor_id: props?.doctor_id ?? null,
   };
 
+  // this function will be used as a callback after successful post/mutation/creation of a new appointment
+  function invalidateQueries() {
+    queryClient.invalidateQueries(["doctor", props?.doctor_id]);
+  }
+
+  // this function will also be used in the callbacks list after the appointment is created to close the form
+  function onSubmitted() {
+    props.onSubmitted();
+  }
+
+  // this function is used as a 'bundle' of callbacks to be inserted in the onSuccess callback of the useMutation hook
+  const onSuccessCallbacks = () => {
+    invalidateQueries(); // this function was created above to invalidate the doctor query
+    onSubmitted(); // this function was created above to close the form and was passed down as a prop
+    // I likely need to add more callbacks here.
+    // what other queries need to be invalidated after a new appointment is created? appointments?
+  };
+
   const postAppointment = useMutation({
     mutationFn: () => post("/appointments", postBody),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["doctor", props?.doctor_id]);
-      // I need to tighten this up, what should be invalidated? upcoming_appointments?, doctor/:id?, all?
-    },
+    onSuccess: onSuccessCallbacks,
   });
 
   function handleFormSubmit(e) {
@@ -86,7 +101,7 @@ export default function FormAppointment(props) {
               <div className="flex justify-between">
                 <button
                   type="button"
-                  onClick={props.onClose}
+                  onClick={props.onCancelClick}
                   className="mt-4 text-red-500 bg-transparent border-none"
                 >
                   Cancel
