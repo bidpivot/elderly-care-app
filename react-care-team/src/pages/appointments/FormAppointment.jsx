@@ -4,10 +4,15 @@ import { post } from "../../helpers/useFetch.js";
 
 export default function FormAppointment(props) {
   const queryClient = useQueryClient();
-  const [apptDate, setApptDate] = useState("");
-  const [apptTime, setApptTime] = useState("");
-  const [apptNote, setApptNote] = useState("");
+  const [apptDate, setApptDate] = useState(() =>
+    props.appointment ? props.appointment.date_and_time : ""
+  );
+  const [apptNote, setApptNote] = useState(() =>
+    props.appointment ? props.appointment.note : ""
+  );
   const [validation, setValidation] = useState("");
+
+  useEffect(() => console.log({ apptDate }), [apptDate]);
 
   const postBody = {
     date_and_time: apptDate, // we might want to change this back to utcApptDate
@@ -29,10 +34,12 @@ export default function FormAppointment(props) {
   const onSuccessCallbacks = () => {
     invalidateQueries(); // this function was created above to invalidate the doctor query
     onSubmitted(); // this function was created above to close the form and was passed down as a prop
-    // I likely need to add more callbacks here.
+    // I mightneed to add more callbacks here.
     // what other queries need to be invalidated after a new appointment is created? appointments?
   };
 
+  // the useMutation hook is used to create a new appointment
+  // it is defined here and then called in the handleFormSubmit function with 'postAppointment.mutate()'
   const postAppointment = useMutation({
     mutationFn: () => post("/appointments", postBody),
     onSuccess: onSuccessCallbacks,

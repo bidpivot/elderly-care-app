@@ -15,6 +15,7 @@ export default function DoctorDetails() {
   const params = useParams();
   const doctor_id = params.id;
   const [formOpen, setFormOpen] = useState(false);
+  const [selectedAppt, setSelectedAppt] = useState(null);
 
   // react query hook that fetches the doctor's data but also related appointment data from that table
   const { data: doctor, isLoading } = useQuery({
@@ -22,6 +23,11 @@ export default function DoctorDetails() {
     queryFn: () => get(`/doctors/${doctor_id}`),
     enabled: !!params.id,
   });
+
+  function openModalWithApptData(appointment) {
+    setSelectedAppt(appointment);
+    setFormOpen(true);
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -42,7 +48,15 @@ export default function DoctorDetails() {
       </div>
       <DoctorAddress doctor={doctor} />
       <DoctorLatestInfo doctor={doctor} />
-      <DoctorApptHistory apptsHistory={apptsHistory} context={context} />{" "}
+      <DoctorApptHistory
+        onCancelClick={() => setFormOpen(false)}
+        onSubmitted={() => setFormOpen(false)}
+        formOpen={formOpen} // this is a boolean
+        openModalWithApptData={openModalWithApptData}
+        apptsHistory={apptsHistory}
+        context={context}
+        doctor={doctor}
+      />{" "}
       {!formOpen && (
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -57,6 +71,7 @@ export default function DoctorDetails() {
           onSubmitted={() => setFormOpen(false)}
           formOpen={formOpen} // this is a boolean
           doctor_id={doctor_id}
+          appointment={selectedAppt}
         />
       )}
     </div>
